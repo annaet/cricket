@@ -10,8 +10,11 @@
   },
   "scripts": {
     "prestart": "npm install",
-    "start": "http-server -a localhost -p 8000 -c-1 ./app",
-
+    "start": "node ./app.js",
     "pretest": "npm install"
+  },
+  "dependencies": {
+    "express": "^4.14.0",
+    "cfenv": "1.0.x"
   }
 }
