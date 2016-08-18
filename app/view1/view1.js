@@ -1,0 +1,72 @@
+'use strict';
+
+angular.module('myApp.view1', ['ngRoute'])
+
+.config(['$routeProvider', function($routeProvider) {
+  $routeProvider.when('/view1', {
+    templateUrl: 'view1/view1.html',
+    controller: 'View1Ctrl'
+  });
+}])
+
+.controller('View1Ctrl', ['$scope', '$http', '$q', function($scope, $http, $q) {
+
+  var nodeRed = 'http://bbc-nr.mybluemix.net/';
+
+  $scope.conversation = [{
+    question: 'Who is Sachin Tendulkar?',
+    answer: 'Sachin Ramesh Tendulkar is a former Indian cricketer and captain, widely regarded as one of the greatest batsmen of all time. He took up cricket at the age of eleven, made his Test debut on 15 November 1989 against Pakistan in Karachi at the age of sixteen, and went on to represent Mumbai domestically and India internationally for close to twenty-four years. He is the only player to have scored one hundred international centuries, the first batsman to score a double century in a One Day International, the holder of the record for the number of runs in both ODI and Test cricket, and the only player to complete more than 30,000 runs in international cricket.',
+    from: 'DuckDuckGo',
+    confidence: '100'
+  }];
+
+  var addQA = function(question, answer, from, confidence) {
+    $scope.conversation.push({
+      question: question,
+      answer: answer,
+      from: from,
+      confidence: confidence
+    });
+  };
+
+  var addFailedQA = function() {
+    $scope.conversation.push({
+      question: $scope.question,
+      answer: 'No results'
+    });
+  };
+
+  $scope.ask = function () {
+    if ($scope.question) {
+      console.log($scope.question);
+
+      var ddg = $http.post(nodeRed + 'ddg', {question: $scope.question});
+      var dbpedia = $http.post(nodeRed + 'dbpedia', {question: $scope.question});
+      var stats = $http.post(nodeRed + 'stats', {question: $scope.question});
+
+      var promises = [ddg, dbpedia, stats];
+
+      $q.all(promises)
+        .then(function(response) {
+          console.log(response);
+          var highestConfidence = 0;
+          var result;
+
+          response.forEach(function(r) {
+            if (r.data.confidence > highestConfidence) {
+              result =  r.data;
+            }
+          });
+
+          console.log(result);
+          if (result) {
+            addQA(result.question, result.result, result.from, result.confidence);
+          } else {
+            addFailedQA();
+          }
+        }, function(response) {
+          console.log(response);
+        });
+    }
+  };
+}]);
