@@ -21,6 +21,6 @@
 </div>
 
 <div class="input-group bbc-ask-question">
-  <input type="text" class="form-control bbc-input-group" placeholder="..." ng-model="question">
-  <button type="button" class="btn btn-default bbc-input-addon" ng-click="ask()">Ask Hudson</button>
+  <input type="text" class="form-control bbc-input-group" placeholder="{{exampleQuestions[0]}}" ng-model="question" ng-keydown="key($event)" ng-keypress="key($event)">
+  <button type="button" class="btn btn-default bbc-input-addon" ng-disabled="answering" ng-click="ask()">Ask Hudson</button>
 </div>

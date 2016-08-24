@@ -2,6 +2,67 @@ html, body, .bbc-container {
   height: 100%;
 }
 
+.bbc-login {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+}
+
+.bbc-login-box {
+  width: 400px;
+  height: 600px;
+  background: white;
+  border: 2px solid #bbb;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  align-content: center;
+  padding: 40px;
+}
+
+.bbc-h1 {
+  text-align: center;
+  width: 100%;
+  margin: 0 0 40px 0;
+  color: #468C3E;
+  font-family: 'Trebuchet MS1', Helvetica, sans-serif;
+  font-weight: lighter;
+  font-size: 50px;
+}
+
+.bbc-full-width {
+  width: 100%;
+  margin: 5px 0;
+}
+
+.bbc-login-label {
+  width: 100px;
+  display: inline-block;
+}
+
+.bbc-login-input {
+  width: 212px;
+}
+
+.btn-login {
+  width: 100%;
+  margin: 40px 0 0 0;
+  border-radius: 0;
+  background-color: #468C3E;
+  border: none;
+  color: white;
+}
+
+.btn-login:hover, .btn-login:focus {
+  color: white;
+}
+
+.bbc-login-error {
+  height: 50px;
+  text-align: center;
+}
+
 .bbc-conversation {
   height: calc(100% - 34px);
   padding: 20px 0;
@@ -40,7 +101,11 @@ html, body, .bbc-container {
   align-self: center;
 }
 
-.bbc-logo .glyphicon, .bbc-logo img {
+.bbc-logo .glyphicon {
+  margin-right: 20px;
+}
+
+.bbc-logo img {
   width: 40px;
   height: 40px;
   margin-right: 20px;

@@ -20,6 +20,68 @@ angular.module('myApp.view1', ['ngRoute'])
     confidence: '100'
   }];
 
+  $scope.exampleQuestions = [
+    "what is sachin tendulkar date of birth",
+    "what is sachin tendulkar place of birth",
+    "what is sachin tendulkar religion",
+    "what is sachin tendulkar role",
+    "what is sachin tendulkar batting average",
+    "what is sachin tendulkar bowling average",
+    "what is sachin tendulkar batting hand",
+    "what is sachin tendulkar bowling hand",
+    "what is sachin tendulkar nickname",
+    "who does sachin tendulkar play for",
+    "what is sachin tendulkar captaincy list",
+    "what is sachin tendulkar man of the match list",
+    "what is andrew strauss batting average",
+    "what is andrew strauss career runs",
+    "what is andrew strauss total runs",
+    "what is andrew strauss balls faced",
+    "what is andrew strauss total outs",
+    "what is andrew strauss batting innings",
+    "what is andrew strauss career matches",
+    "what is andrew strauss total matches",
+    "what player has the highest batting average",
+    "what player has the lowest batting average",
+    "who has the highest batting average",
+    "what Aussie has the highest batting average",
+    "what Aussie has the highest batting average in an ODI",
+    "what Aussie has the highest batting average in an ODI first innings"
+  ];
+  var exampleIndex = 0;
+
+  var setExampleQuestion = function() {
+    $scope.question = $scope.exampleQuestions[exampleIndex];
+  };
+
+  var increment = function() {
+    exampleIndex++;
+
+    if (exampleIndex === $scope.exampleQuestions.length) {
+      exampleIndex = 0;
+    }
+  };
+
+  var decrement = function() {
+    exampleIndex--;
+
+    if (exampleIndex < 0) {
+      exampleIndex = $scope.exampleQuestions.length - 1;
+    }
+  };
+
+  $scope.key = function($event){
+    if ($event.keyCode === 38) {
+      setExampleQuestion();
+      increment();
+    } else if ($event.keyCode === 40) {
+      setExampleQuestion();
+      decrement();
+    } else if ($event.keyCode === 13) {
+      $scope.ask();
+    }
+  };
+
   var addQA = function(question, answer, from, confidence) {
     $scope.conversation.push({
       question: question,
@@ -37,8 +99,8 @@ angular.module('myApp.view1', ['ngRoute'])
   };
 
   $scope.ask = function () {
-    if ($scope.question) {
-      console.log($scope.question);
+    if ($scope.question && !$scope.answering) {
+      $scope.answering = true;
 
       var ddg = $http.post(nodeRed + 'ddg', {question: $scope.question});
       var dbpedia = $http.post(nodeRed + 'dbpedia', {question: $scope.question});
@@ -53,17 +115,18 @@ angular.module('myApp.view1', ['ngRoute'])
           var result;
 
           response.forEach(function(r) {
-            if (r.data.confidence > highestConfidence) {
+            if (r.data.confidence >= highestConfidence && r.data.result !== "I don't know.") {
               result =  r.data;
             }
           });
 
           console.log(result);
-          if (result) {
+          if (result && result.confidence > 0) {
             addQA(result.question, result.result, result.from, result.confidence);
           } else {
             addFailedQA();
           }
+          $scope.answering = false;
         }, function(response) {
           console.log(response);
         });
